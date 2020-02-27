@@ -56,8 +56,6 @@ def receive_submission():
     print(selected_groups_df)
     AWS_S3_ACCESS_KEY = decouple.config('AWS_S3_ACCESS_KEY')
     AWS_S3_SECRET = decouple.config('AWS_S3_SECRET')
-    sendgrid_key = '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'
-    sendgrid_name = 'scvi_de_wormbase'
 
     csv_buffer = StringIO()
     selected_groups_df.to_csv(csv_buffer)
@@ -66,12 +64,12 @@ def receive_submission():
                           aws_access_key_id=AWS_S3_ACCESS_KEY,
                           aws_secret_access_key=AWS_S3_SECRET
                           )
-    # client.put_object(
-    #     Body=csv_buffer.getvalue(),
-    #     Bucket='scvi-differential-expression',
-    #     Key=s3filename,
-    #     ACL='public-read'
-    # )
+    client.put_object(
+        Body=csv_buffer.getvalue(),
+        Bucket='scvi-differential-expression',
+        Key=s3filename,
+        ACL='public-read'
+    )
     url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(s3filename)
     print('the objeoct has been put')
     print(s3filename)
@@ -86,16 +84,16 @@ echo "sudo halt" '''
     print(user_data)
 
     # create a new EC2 instance
-    # instances = ec2.create_instances(
-    #     ImageId='ami-032240eb155129553',
-    #     MinCount=1,
-    #     MaxCount=1,
-    #     InstanceType='t2.micro',
-    #     UserData=user_data,
-    #     KeyName='ec2-keypair'
-    # )
-    #
-    # print('the instance has been created')
+    instances = ec2.create_instances(
+        ImageId='ami-032240eb155129553',
+        MinCount=1,
+        MaxCount=1,
+        InstanceType='r5d.4xlarge',
+        UserData=user_data,
+        KeyName='ec2-keypair'
+    )
+
+    print('the instance has been created')
 
 
     return 'derpderp'
