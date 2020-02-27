@@ -207,7 +207,7 @@ client.put_object(
 csv_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(csvfilename)
 html_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
 
-email_body = f' Your C. elegans single cell differential results are ready. <br> CSV file: {csv_url} <br> Vocano plot: {html_url} <br> <br> Thanks <br> Eduardo'
+email_body = f' Your C. elegans single cell differential results are ready. <br> CSV file: {csv_url} <br> Vocano plot: {html_url} <br> Selected cells: {url} <br> <br> Thanks <br> Eduardo'
 print(email_body)
 
 message = Mail(

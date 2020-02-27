@@ -79,6 +79,7 @@ def receive_submission():
 
     ec2 = boto3.resource('ec2')
     user_data = '''#!/bin/bash
+wget https://github.com/Munfred/wormcells-de/blob/master/scvi_de.py    
 python3 scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;
 echo "sudo halt" '''
 
