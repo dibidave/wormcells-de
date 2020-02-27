@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, jsonify, request, render_template
+from flask import Flask,  jsonify, request, render_template
 import logging
 import pandas as pd
 import sys
@@ -13,35 +13,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 flask_app = Flask(__name__)
 
-tables = Blueprint('tables', __name__, url_prefix='/tables')
-
-# df with the number of cells of each label in each dataset
-df = pd.read_csv(flask_app.open_resource('df.csv'))
-
-# convert df to dict for sending as json to datatables
-dict_df = df.to_dict(orient='records')
-
-# convert column names into dict for sending as json to datatables
-columns = [{"data": item, "title": item} for item in df.columns]
-
-
-@tables.route("/clientside_table", methods=['GET'])
-def clientside_table_content():
-    return jsonify({'data': dict_df, 'columns': columns})
-
-
-flask_app.register_blueprint(tables)
-
-
 @flask_app.route("/")
 def index():
     return render_template("index.html")
-
-
-@flask_app.route("/clientside_table")
-def clientside_table():
-    return render_template("clientside_table.html")
-
 
 @flask_app.route('/submit', methods=['POST', 'GET'])
 def receive_submission():
@@ -82,6 +56,8 @@ def receive_submission():
     print(selected_groups_df)
     AWS_S3_ACCESS_KEY = decouple.config('AWS_S3_ACCESS_KEY')
     AWS_S3_SECRET = decouple.config('AWS_S3_SECRET')
+    sendgrid_key = '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'
+    sendgrid_name = 'scvi_de_wormbase'
 
     csv_buffer = StringIO()
     selected_groups_df.to_csv(csv_buffer)
@@ -90,26 +66,27 @@ def receive_submission():
                           aws_access_key_id=AWS_S3_ACCESS_KEY,
                           aws_secret_access_key=AWS_S3_SECRET
                           )
-    client.put_object(
-        Body=csv_buffer.getvalue(),
-        Bucket='scvi-differential-expression',
-        Key=s3filename,
-        ACL='public-read'
-    )
+    # client.put_object(
+    #     Body=csv_buffer.getvalue(),
+    #     Bucket='scvi-differential-expression',
+    #     Key=s3filename,
+    #     ACL='public-read'
+    # )
     url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(s3filename)
     print('the objeoct has been put')
     print(s3filename)
+    print()
 
     ec2 = boto3.resource('ec2')
-
     user_data = '''#!/bin/bash
-python3 dev1.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET
+python3 scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;
+echo "sudo halt" '''
 
     print(user_data)
 
     # create a new EC2 instance
     # instances = ec2.create_instances(
-    #     ImageId='ami-0fc20dd1da406780b',
+    #     ImageId='ami-032240eb155129553',
     #     MinCount=1,
     #     MaxCount=1,
     #     InstanceType='t2.micro',
