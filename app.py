@@ -75,10 +75,10 @@ def receive_submission():
         Key=s3filename,
         ACL='public-read'
     )
-    # session = boto3.Session(region_name='us-east-2',
-    #                         aws_access_key_id=AWS_S3_ACCESS_KEY,
-    #                         aws_secret_access_key=AWS_S3_SECRET)
-    #
+    session = boto3.Session(region_name='us-east-2',
+                            aws_access_key_id=AWS_S3_ACCESS_KEY,
+                            aws_secret_access_key=AWS_S3_SECRET)
+
     # s3 = session.resource('s3')
     # bucket = s3.Bucket('scvi-differential-expression')
     # bucket.Acl().put(ACL='public-read')
@@ -90,7 +90,7 @@ def receive_submission():
     print(s3filename)
     print()
 
-    ec2 = boto3.resource('ec2')
+    ec2 = session.resource('ec2')
     user_data = '''#!/bin/bash
 pwd > /home/ubuntu/started_ok.txt
 runuser -l  ubuntu -c 'pwd > /home/ubuntu/iamubuntu.txt'   ;
