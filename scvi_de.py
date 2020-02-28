@@ -97,7 +97,7 @@ for _, entry in submission[['cell_type1', 'experiment1']].dropna().iterrows():
 
 cell_idx2 = adata.obs['cell_type'] == '000000'
 
-for _, entry in submission[['cell_type2', 'experiment2']].iterrows():
+for _, entry in submission[['cell_type2', 'experiment2']].dropna().iterrows():
     cell = entry['cell_type2'].strip()
     experiment = entry['experiment2'].strip()
     curr_boolean = (adata.obs['cell_type'] == cell) & (adata.obs['experiment'] == experiment)
@@ -187,6 +187,9 @@ client = boto3.client('s3',
                       aws_access_key_id=AWS_S3_ACCESS_KEY,
                       aws_secret_access_key=AWS_S3_SECRET
                       )
+
+print(AWS_S3_ACCESS_KEY)
+print(AWS_S3_SECRET)
 client.put_object(
     Body=csv_buffer.getvalue(),
     Bucket='scvi-differential-expression',
@@ -226,4 +229,7 @@ except Exception as e:
 
 print('DONE!!!!!!!')
 print('DONE!!!!!!!')
-print('DONE!!!!!!!')
+print('Terminating... ')
+instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
+ec2 = boto3.resource('ec2', region_name='us-east-2')
+ec2.instances.filter(InstanceIds = [instance_id]).terminate()

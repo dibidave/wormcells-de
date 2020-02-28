@@ -59,12 +59,15 @@ def receive_submission():
     sendgrid_key = decouple.config('sendgrid_key')
     sendgrid_name = decouple.config('sendgrid_name')
 
+    print(AWS_S3_SECRET)
+    print(AWS_S3_ACCESS_KEY)
     csv_buffer = StringIO()
     selected_groups_df.to_csv(csv_buffer)
 
     client = boto3.client('s3',
                           aws_access_key_id=AWS_S3_ACCESS_KEY,
-                          aws_secret_access_key=AWS_S3_SECRET
+                          aws_secret_access_key=AWS_S3_SECRET,
+                          # region_name='us-east-2'
                           )
     client.put_object(
         Body=csv_buffer.getvalue(),
@@ -72,6 +75,16 @@ def receive_submission():
         Key=s3filename,
         ACL='public-read'
     )
+    # session = boto3.Session(region_name='us-east-2',
+    #                         aws_access_key_id=AWS_S3_ACCESS_KEY,
+    #                         aws_secret_access_key=AWS_S3_SECRET)
+    #
+    # s3 = session.resource('s3')
+    # bucket = s3.Bucket('scvi-differential-expression')
+    # bucket.Acl().put(ACL='public-read')
+    # bucket.upload_file(csv_buffer.getvalue(), s3filename)
+
+
     url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(s3filename)
     print('the objeoct has been put')
     print(s3filename)
@@ -79,9 +92,14 @@ def receive_submission():
 
     ec2 = boto3.resource('ec2')
     user_data = '''#!/bin/bash
-wget https://raw.githubusercontent.com/Munfred/wormcells-de/master/scvi_de.py   
-python3 scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;
-echo "sudo halt" '''
+touch derp.txt 
+pwd > /home/ubuntu/pwd.txt
+runuser -l  ubuntu -c 'pwd > /home/ubuntu/iamubuntu.txt'   ;
+runuser -l  ubuntu -c 'wget -O /home/ubuntu/scvi_de.py https://raw.githubusercontent.com/Munfred/wormcells-de/master/scvi_de.py'   ;
+runuser -l  ubuntu -c 'python3 /home/ubuntu/scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;'
+echo "sudo halt" 
+
+'''
 
     print(user_data)
 
