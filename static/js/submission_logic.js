@@ -46,7 +46,7 @@ $(document).ready(function () {
                 'email': email,
                 'genes': json_genes
             });
-            // location.reload();
+            location.reload();
         }
         ;
     });

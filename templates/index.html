@@ -18,11 +18,22 @@
         <p>The <code>wormcells-de</code> app allows you to perform differential expression on data from C. elegans
             single cell RNA sequencing (scRNAseq). 21 experiments from 3 different studies were integrated and can be compared. That
             means you can select cells from two different experiments and perform differential expression on them!</p>
+
+
         <p>Just select cell types and experiments to compare, some genes to highlight in your volcano plot, and leave
-            your email. Results should arrive in less than 15 minutes. If they take more than an hour, something broke, so
-            let me know by writing to eduardo@wormbase.org. Also feel free to write me if you have any feedback.</p>
-        <p>The single cell gene count matrixes were processed using a machine learning framework called <a
-                href="https://github.com/YosefLab/scVI">Single-cell Variational Inference (scVI)</a>. The scVI framework
+            your email. You will receive an
+            <a href="https://scvi-differential-expression.s3.us-east-2.amazonaws.com/plots/eduardo%40wormbase.org%4020200227-233946-results.html">interactive volcano plot</a>, a
+            <a href="https://scvi-differential-expression.s3.us-east-2.amazonaws.com/csv/eduardo%40wormbase.org%4020200227-233946-results.csv">a csv file with the results</a> and
+        a <a href=" https://scvi-differential-expression.s3.us-east-2.amazonaws.com/submissions/eduardo%40wormbase.org%2520200227-233946.csv">csv file with the submitted groups and genes.
+                The example files linked show the result of the example submission below.</a>
+
+            <p>Results should arrive in less than 15 minutes. If they take more than an hour, something broke, so
+            let me know by writing to eduardo@wormbase.org. The <code>wormcells-de</code> app is still in development and feedback
+        on this tool will inform how WormBase may incorporate and display single cell data in the future.
+        Feel free to write me if you have any feedback.</p>
+
+        <p>The single cell gene count matrixes were processed using a machine learning framework called
+            <a href="https://github.com/YosefLab/scVI">Single-cell Variational Inference (scVI)</a>. The scVI framework
             enables
             integrating data from different sources (different experiments, batches and technologies), clustering and
             label
@@ -33,8 +44,7 @@
             performs differential expression as is here here. It runs on Google Colab so you can start playing right
             away.</p>
         <p>The <code>wormcells-de</code> app is still in development and on this tool will inform how WormBase may
-            incorporate
-            and display single cell data in the future. </p>
+            incorporateand display single cell data in the future. </p>
     </div>
 
     <h2> Select cells to compare</h2>
@@ -63,7 +73,9 @@ ADL, L2_experiment_2</textarea>
             <p>If you would like to highlight genes on the resulting volcano plot, add one gene per line. <br>
                 Gene name (<samp>bus-1</samp>) or WormBase ID are accepted (<samp>WBGene00018223</samp>) <br>
                 Partial matches will be highlighted , e.g. just <samp>bus</samp> highlight bus-1 and bus-18 genes.</p>
-            <textarea name="genes" rows="15" cols="30"></textarea>
+            <textarea name="genes" rows="15" cols="30">nlp
+flp
+ins</textarea>
 
             <br><br>
             <label for="email" class="email">Enter your email to receive results:</label>
