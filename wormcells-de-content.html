@@ -1,86 +1,26 @@
-{% extends "template.html" %}
-{% block title %}
-
-    <title>wormcells-de!</title>
-
-{% endblock %}
-{% block body %}
-
-    <script type="text/javascript" src="/static/js/submission_logic.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-
-
-    <div class="normal">
-    <div>
-        <h1 id="-wormcells-de-exploring-c-elegans-single-cell-rna-sequencing-data"><code>wormcells-de</code>: Differential expression on
-            C.elegans single cell RNA sequencing data</h1>
-        <p>The <code>wormcells-de</code> app allows you to perform differential expression on data from C. elegans
-            single cell RNA sequencing (scRNAseq). 21 experiments from 3 different studies were integrated and can be compared. That
-            means you can select cells from two different experiments and perform differential expression on them!</p>
-        <p>Just select cell types and experiments to compare, some genes to highlight in your volcano plot, and leave
-            your email. Results should arrive in less than 15 minutes. If they take more than an hour, something broke, so
-            let me know by writing to eduardo@wormbase.org. Also feel free to write me if you have any feedback.</p>
-        <p>The single cell gene count matrixes were processed using a machine learning framework called <a
-                href="https://github.com/YosefLab/scVI">Single-cell Variational Inference (scVI)</a>. The scVI framework
-            enables
-            integrating data from different sources (different experiments, batches and technologies), clustering and
-            label
-            transfer, and performing differential expression between clusters.</p>
-        <p>To learn how the plots were made, check out <a
-                href="https://colab.research.google.com/drive/1hF7KSujhhHcyxzWkzAHy9lazXLexainr">this Jupyter
-            notebook</a> which
-            performs differential expression as is here here. It runs on Google Colab so you can start playing right
-            away.</p>
-        <p>The <code>wormcells-de</code> app is still in development and on this tool will inform how WormBase may
-            incorporate
-            and display single cell data in the future. </p>
-    </div>
-
-    <h2> Select cells to compare</h2>
-    <p>Input them separated by commas: <br>
-        <samp>cell_label, experiment_name</samp></p>
-    <p>Add one entry per line.</p>
-
-    <p> You can view the number of cells in each available experiment in
-        <a href="https://docs.google.com/spreadsheets/d/1xm0D-gqN8uMkmTYBjl-VJftCbB6NOkoX1C2RLreGsfY/edit?usp=sharing">
-            this spreadsheet.</a></p>
-    <div>
-        <form action="/">
-            <h3> Input cells and experiments in group 1</h3>
-            <textarea name="group1" rows="15" cols="60">
-XXX, L2_experiment_1
-AFD, Waterston_300_minutes
-YYY, ceh-34</textarea>
-            <br><br>
-            <h3> Input cells and experiments in group 2</h3>
-
-            <textarea name="group2" rows="15" cols="60">
-SMDD, cho-1_2
-SMD, Waterston_500_minutes_batch_2
-ADL, L2_experiment_2</textarea>
-
-            <p>If you would like to highlight genes on the resulting volcano plot, add one gene per line. <br>
-                Gene name (<samp>bus-1</samp>) or WormBase ID are accepted (<samp>WBGene00018223</samp>) <br>
-                Partial matches will be highlighted , e.g. just <samp>bus</samp> highlight bus-1 and bus-18 genes.</p>
-            <textarea name="genes" rows="15" cols="30"></textarea>
-
-            <br><br>
-            <label for="email" class="email">Enter your email to receive results:</label>
-            <input type="email" id="email" name="email" size="40">
-        </form>
-    </div>
-    <div>
-        <br>
-        <button type="submit" value="Submit"
-                style="background: greenyellow; font-size:20px; width: 250px; padding: 14px 40px;">Submit 💥 📱 🔬
-        </button>
-    </div>
- <div>
+<h1 id="-wormcells-de-exploring-c-elegans-single-cell-rna-sequencing-data"><code>wormcells-de</code>: Exploring C.
+    elegans single cell RNA sequencing data</h1>
+<p>The <code>wormcells-de</code> app allows you to perform differential expression on data from C. elegans single cell
+    RNA sequencing (scRNAseq). 21 experiments from 3 different studies were integrated and can be compared. That means
+    you can select cells from two different experiments and perform differential expression on them!</p>
+<p>Just select cell types and experiments to compare, some genes to highlights in your volcano plot, and leave your
+    email. Results should arrive in less than 15 minutes. If they take more than an hour, something broke, so let me
+    know by writing to eduardo@wormbase.org. Also feel free to write me if you have any feedback.</p>
+<p>The single cell gene count matrixes were processed using a machine learning framework called <a
+        href="https://github.com/YosefLab/scVI">Single-cell Variational Inference (scVI)</a>. The scVI framework enables
+    integrating data from different sources (different experiments, batches and technologies), clustering and label
+    transfer, and performing differential expression between clusters.</p>
+<p>To learn how the plots were made, check out <a
+        href="https://colab.research.google.com/drive/1hF7KSujhhHcyxzWkzAHy9lazXLexainr">this Jupyter notebook</a> which
+    performs differential expression as is here here. It runs on Google Colab so you can start playing right away.</p>
+<p>The <code>wormcells-de</code> app is still in development and feedback on this tool will inform how WormBase may incorporate
+    and display single cell data in the future. </p>
 
 
 
-<h1 id="about-the-data"><br> <br>About the data</h1>
+
+
+<h1 id="about-the-data">About the data</h1>
 <p>The 21 experiments come from 3 different studies and are described below. To perform a comparison, you must choose
     two groups. Each group can have any number of pairs (<code>cell_type</code>, <code>experiment</code>) to be
     compared.</p>
@@ -89,12 +29,9 @@ ADL, L2_experiment_2</textarea>
     be accessed here</a>. Note that sometimes experiments used slightly different labels for the same cell type, which
     is why there might be repetition. This table provides the original study annotations. In the future we might
     re-annotate the data with harmonized labels. </p>
-
-
-
-<h2 id="cao-2017-l2-larva-dataset-reprocessed-"><br>Cao 2017 L2 Larva Dataset (reprocessed)</h2>
-<p><i>Cao and friends. <a href="https://doi.org/10.1126/science.aam8940">Comprehensive single-cell transcriptional profiling
-    of a multicellular organism</a>. Science 2017.</i></p>
+<h2 id="cao-2017-l2-larva-dataset-reprocessed-">Cao 2017 L2 Larva Dataset (reprocessed)</h2>
+<p>Cao and friends.<a href="https://doi.org/10.1126/science.aam8940">Comprehensive single-cell transcriptional profiling
+    of a multicellular organism</a>. Science 2017.</p>
 <p>This was the first scRNAseq C. elegans data to be published. The single cell matrices used here were a newer version
     that was reprocessed and re-annotated and kindly provided by Robert Waterston and colleagues.</p>
 <p>The technology used was sci-RNA seq. Two experiments with C. elegans at the L2 larval stage were performed with
@@ -103,16 +40,9 @@ ADL, L2_experiment_2</textarea>
         class="hljs-number">35480</span>
 L<span class="hljs-number">2</span>_experime<span class="hljs-symbol">nt_2</span>      <span
             class="hljs-number">507</span>
-</code></pre>
-
-
-
-
-
-
-     <h2 id="packer-2019-embryogenesis-dataset"><br>Packer 2019 Embryogenesis Dataset</h2>
-<p><i>Packer and friends.<a href="https://science.sciencemag.org/content/365/6459/eaax1971.long">A lineage-resolved
-    molecular atlas of C. elegans embryogenesis at single-cell resolution</a>. Science 2019.</i></p>
+</code></pre><h2 id="packer-2019-embryogenesis-dataset">Packer 2019 Embryogenesis Dataset</h2>
+<p>Packer and friends.<a href="https://science.sciencemag.org/content/365/6459/eaax1971.long">A lineage-resolved
+    molecular atlas of C. elegans embryogenesis at single-cell resolution</a>. Science 2019.</p>
 <p>In the paper supplements, the way the age of the embryos was defined is described as follows: <em>Around 250,000 L1
     larvae were 29 plated onto four 100 mm petri plates seeded with NA22 bacteria and allowed to develop at 20 30 °C. As
     the worms reached the young adult stage, the population was closely monitored. When 31 about 20-30% of the adults
@@ -127,9 +57,9 @@ Waterston_500_minutes_batch_2   <span class="hljs-number"> 11589 </span>       <
 Waterston_500_minutes_batch_1   <span class="hljs-number"> 10532 </span>       <span class="hljs-comment"># 500 minute synchronized embryos, replicate 2</span>
 Murray_r17                       <span class="hljs-number"> 9363 </span>       <span class="hljs-comment"># mixed time point. Unclear description of sample from the paper</span>
 Murray_b02                       <span class="hljs-number"> 3045 </span>       <span class="hljs-comment"># mixed time point. Unclear description of sample from the paper</span>
-</code></pre><h2><br>Taylor 2019 Neuron Dataset</h2><p><i>Taylor and friends. <a
+</code></pre><p>Taylor 2019 Neuron Dataset<br>Taylor and friends. <a
         href="https://www.biorxiv.org/content/10.1101/737577v2">Expression profiling of the mature C. elegans nervous
-     system by single-cell RNA-Sequencing</a>. biorxiv 2019.</i></p>
+    system by single-cell RNA-Sequencing</a>. biorxiv 2019.</p>
 <p>This is the first data release of the C. elegans Neuronal Gene Expression Map &amp; Network (CeNGEN). The aim of the
     project is to establish a comprehensive gene expression atlas of an entire nervous system at single-neuron
     resolution, described in (the announcement publication)[<a href="https://doi.org/10.1016/j.neuron.2018.07.042">https://doi.org/10.1016/j.neuron.2018.07.042</a>].
@@ -158,7 +88,3 @@ nmr<span class="hljs-number">-1</span>                             <span class="
 unc<span class="hljs-number">-47</span>_1                          <span class="hljs-number">1261</span>        # pan-GABA <span
             class="hljs-number">1</span> from strain EG1285 and NC3582
 </code></pre>
-
- </div>
- </div>
-{% endblock %}
