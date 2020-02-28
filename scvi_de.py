@@ -30,7 +30,7 @@ sendgrid_key = (sys.argv[4])
 
 sendgrid_name = (sys.argv[5])
 
-save_path = "scvi_de_ec2_script/"
+save_path = "./"
 
 vae_file_name = 'cpt_vae.pkl'
 

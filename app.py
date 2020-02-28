@@ -56,6 +56,8 @@ def receive_submission():
     print(selected_groups_df)
     AWS_S3_ACCESS_KEY = decouple.config('AWS_S3_ACCESS_KEY')
     AWS_S3_SECRET = decouple.config('AWS_S3_SECRET')
+    sendgrid_key = decouple.config('sendgrid_key')
+    sendgrid_name = decouple.config('sendgrid_name')
 
     csv_buffer = StringIO()
     selected_groups_df.to_csv(csv_buffer)
@@ -77,7 +79,7 @@ def receive_submission():
 
     ec2 = boto3.resource('ec2')
     user_data = '''#!/bin/bash
-wget https://github.com/Munfred/wormcells-de/blob/master/scvi_de.py    
+wget https://raw.githubusercontent.com/Munfred/wormcells-de/master/scvi_de.py   
 python3 scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;
 echo "sudo halt" '''
 
