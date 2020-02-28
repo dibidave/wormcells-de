@@ -210,7 +210,7 @@ client.put_object(
 csv_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(csvfilename)
 html_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
 
-email_body = f' Your C. elegans single cell differential results are ready. <br> CSV file: {csv_url} <br> Vocano plot: {html_url} <br> Selected cells: {url} <br> <br> Thanks <br> Eduardo'
+email_body = f' Your C. elegans single cell differential results are ready. <br><br> CSV file with results: {csv_url} <br> Vocano plot: {html_url} <br> Groups of cells compared: {url} <br> <br> Thanks <br> Eduardo'
 print(email_body)
 
 message = Mail(
@@ -231,5 +231,9 @@ print('DONE!!!!!!!')
 print('DONE!!!!!!!')
 print('Terminating... ')
 instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
-ec2 = boto3.resource('ec2', region_name='us-east-2')
+
+session = boto3.Session(region_name='us-east-2',
+                        aws_access_key_id=AWS_S3_ACCESS_KEY,
+                        aws_secret_access_key=AWS_S3_SECRET)
+ec2 = session.resource('ec2', region_name='us-east-2')
 ec2.instances.filter(InstanceIds = [instance_id]).terminate()
