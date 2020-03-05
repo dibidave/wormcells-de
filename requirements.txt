@@ -4,3 +4,4 @@ pandas
 python-decouple
 flask
 boto3
+Flask-Markdown

@@ -1,0 +1,42 @@
+{% extends "template.html" %}
+{% block title %}
+
+    <title> 🌋 wormcells-de 💥 </title>
+
+{% endblock %}
+{% block body %}
+
+    <script type="text/javascript" src="/static/js/submission_logic.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
+
+    <div class="normal">
+        <div>
+            <h1 id="-wormcells-de-exploring-c-elegans-single-cell-rna-sequencing-data"><code>wormcells-de</code>:
+                Differential expression on
+                C.elegans single cell RNA sequencing data</h1>
+            <p>The <code>wormcells-de</code> app allows you to perform differential expression on data from C. elegans
+                single cell RNA sequencing (scRNAseq). 21 experiments from 3 different studies were integrated and can
+                be compared. That
+                means you can select cells from two different experiments and perform differential expression on them!
+            </p>
+
+{% filter markdown %}
+
+{% include 'introduction.md' %}
+
+{% endfilter %}
+
+
+{% filter markdown %}
+
+{% include 'about-the-data.md' %}
+
+{% endfilter %}
+
+
+
+        </div>
+    </div>
+{% endblock %}

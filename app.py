@@ -8,10 +8,16 @@ import boto3
 import decouple
 from io import StringIO
 import urllib
+from flaskext.markdown import Markdown
 
 logging.basicConfig(level=logging.DEBUG)
 
 flask_app = Flask(__name__)
+Markdown(flask_app)
+
+@flask_app.route("/test")
+def test():
+    return render_template("test.html")
 
 @flask_app.route("/")
 def index():
