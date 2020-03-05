@@ -10,7 +10,10 @@ from io import StringIO
 import urllib
 from flaskext.markdown import Markdown
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
+logger=logging.getLogger(__name__)
+logger.info('This is a string')
+
 
 flask_app = Flask(__name__)
 Markdown(flask_app)
@@ -21,11 +24,12 @@ def test():
 
 @flask_app.route("/")
 def index():
+    logger.info('Got a request for index!')
     return render_template("index.html")
 
 @flask_app.route('/submit', methods=['POST', 'GET'])
 def receive_submission():
-    print('buuu')
+    logger.info('Got a submission!')
     # answer is a dict of json strings containing selected row and column index numbers
     answer = request.form.to_dict(flat=False)
     print(answer)
