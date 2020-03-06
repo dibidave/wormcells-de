@@ -69,8 +69,8 @@ def receive_submission():
     sendgrid_key = decouple.config('sendgrid_key')
     sendgrid_name = decouple.config('sendgrid_name')
 
-    print(AWS_S3_SECRET)
-    print(AWS_S3_ACCESS_KEY)
+    # print(AWS_S3_SECRET)
+    # prinzt(AWS_S3_ACCESS_KEY)
     csv_buffer = StringIO()
     selected_groups_df.to_csv(csv_buffer)
 
@@ -127,3 +127,6 @@ echo "sudo halt"
 
 
     return 'derpderp'
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
