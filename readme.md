@@ -9,7 +9,7 @@ It is run with `gunicorn --bind 0.0.0.0:5000 wsgi:flask_app`
 
 `flask_app` is the app name inside `app.py`
 
-## Setting up a new server instance with ubuntu1 18.04
+## Setting up a new server instance with Ubuntu 18.04
 
 ```
 sudo apt update
