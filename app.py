@@ -12,7 +12,7 @@ from flaskext.markdown import Markdown
 
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
-logger.info('This is a string')
+logger.info('Starting wormcells-de...')
 
 
 flask_app = Flask(__name__)
