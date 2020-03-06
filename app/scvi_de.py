@@ -30,7 +30,7 @@ sendgrid_key = (sys.argv[4])
 
 sendgrid_name = (sys.argv[5])
 
-save_path = "./"
+save_path = "../"
 
 sys.stdout = open('log_file.txt', 'w')
 sys.stderr = sys.stdout
