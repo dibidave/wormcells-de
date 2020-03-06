@@ -96,8 +96,8 @@ def receive_submission():
 
 
     url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(s3filename)
-    print('the objeoct has been put')
-    print(s3filename)
+    logger.info('the object has been put')
+    logger.info(s3filename)
     print()
 
     ec2 = session.resource('ec2')
@@ -123,7 +123,7 @@ echo "sudo halt"
         KeyName='ec2-keypair'
     )
 
-    print('the instance has been created')
+    logger.info('the instance has been created')
 
 
     return 'derpderp'
