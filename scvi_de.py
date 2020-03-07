@@ -214,7 +214,7 @@ try:
     csv_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(csvfilename)
     html_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
 
-    email_body = f' Your C. elegans single cell differential results are ready. <br><br> CSV file with results: {csv_url} <br> Vocano plot: {html_url} <br> Groups of cells compared: {url} <br> <br> Thanks <br> Eduardo'
+    email_body = f' Your C. elegans single cell differential expression results from  🌋 wormcells-de 💥 are ready to download. <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>.  <br> <a href="{url}">Your original selection </a> <br> <br> Thanks <br> Eduardo'
     print(email_body)
 
     message = Mail(
