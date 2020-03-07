@@ -44,13 +44,13 @@ columns = [{"data": item, "title": item} for item in df_nice_names.columns]
 
 #### datatables ####
 
-@tables.route("/clientside_table", methods=['GET'])
+@tables.route("/", methods=['GET'])
 def clientside_table_content():
     return jsonify({'data': dict_df, 'columns': columns})
 
 flask_app.register_blueprint(tables)
 
-@flask_app.route("/clientside_table")
+@flask_app.route("/")
 def clientside_table():
     return render_template("clientside_table.html")
 
@@ -61,10 +61,10 @@ def clientside_table():
 def test():
     return render_template("test.html")
 
-@flask_app.route("/")
-def index():
-    logger.info('Got a request for index!')
-    return render_template("index.html")
+# @flask_app.route("/")
+# def index():
+#     logger.info('Got a request for index!')
+#     return render_template("index.html")
 
 @flask_app.route('/submit', methods=['POST', 'GET'])
 def receive_submission():
@@ -187,14 +187,14 @@ echo "sudo halt"
     print(user_data)
 
     # create a new EC2 instance
-    # instances = ec2.create_instances(
-    #     ImageId='ami-032240eb155129553',
-    #     MinCount=1,
-    #     MaxCount=1,
-    #     InstanceType='r5d.4xlarge',
-    #     UserData=user_data,
-    #     KeyName='ec2-keypair'
-    # )
+    instances = ec2.create_instances(
+        ImageId='ami-032240eb155129553',
+        MinCount=1,
+        MaxCount=1,
+        InstanceType='r5d.4xlarge',
+        UserData=user_data,
+        KeyName='ec2-keypair'
+    )
 
     logger.info('the instance has been created')
 
