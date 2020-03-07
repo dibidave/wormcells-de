@@ -1,6 +1,3 @@
-<br>
-<br>
-<br>
 
 # About the data
 
