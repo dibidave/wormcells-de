@@ -24,46 +24,50 @@
     <script type="text/javascript"
             src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 
     <div class="normal">
-    <div>
-        {% filter markdown %}
-
-            {% include 'introduction.md' %}
-
-        {% endfilter %}
-    </div>
-
-    <h3>1) Enter your email to receive results</h3>
-    <h3>2) Select cells in the tables below</h3>
-    <h3>3) Optional: choose genes to highlight</h3>
-    <form>
         <div>
-            <p>If you would like to highlight genes on the resulting volcano plot, add one gene per line. <br>
-                Gene name (<samp>bus-1</samp>) or WormBase ID are accepted (<samp>WBGene00018223</samp>) <br>
-                Partial matches will be highlighted , e.g. just <samp>bus</samp> highlight bus-1 and bus-18 genes.</p>
-            <textarea name="genes" rows="10" cols="30">nlp
+            {% filter markdown %}
+
+                {% include 'introduction.md' %}
+
+            {% endfilter %}
+        </div>
+
+        <h3>1) Enter your email to receive results</h3>
+        <h3>2) Select cells in the tables below</h3>
+        <h3>3) Optional: choose genes to highlight</h3>
+        <form>
+            <div>
+                <p>If you would like to highlight genes on the resulting volcano plot, add one gene per line. <br>
+                    Gene name (<samp>bus-1</samp>) or WormBase ID are accepted (<samp>WBGene00018223</samp>) <br>
+                    Partial matches will be highlighted , e.g. just <samp>bus</samp> highlight bus-1 and bus-18 genes.
+                </p>
+                <textarea name="genes" rows="10" cols="30">nlp
 flp
 ins</textarea>
-        </div>
+            </div>
 
-        <br> <br>
+            <br> <br>
+            <div>
+                <h4> Enter your email:</h4>
+                <input type="email" id="email" name="email" size=40>
+                <br>
+                <h4> (Optional) Provide a name for your job:</h4>
+                <input type="text" id="text" name="text" size=40>
+
+            </div>
+        </form>
+
+
         <div>
-            <h4> Enter your email:</h4>
-            <input type="email" id="email" name="email" size=40>
             <br>
+            <button type="submit" value="Submit"
+                    style="background: greenyellow; font-size:20px; width: 250px; padding: 14px 40px;">Submit 💥 📱 🔬
+            </button>
         </div>
-    </form>
-
-
-    <div>
-        <br>
-        <button type="submit" value="Submit"
-                style="background: greenyellow; font-size:20px; width: 250px; padding: 14px 40px;">Submit 💥 📱 🔬
-        </button>
-    </div>
     </div>
 
 
@@ -81,7 +85,7 @@ ins</textarea>
                style="border-bottom: none; " width="100%"></table>
     </div>
 
-<div class="normal">
+    <div class="normal">
     <div>
         <br>
         <br>

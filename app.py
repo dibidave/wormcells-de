@@ -106,6 +106,11 @@ def receive_submission():
         genes = StringIO(json.loads(answer['genes'][0]))
         genes_df = pd.read_csv(genes, names=['selected_genes'])
         print(genes_df)
+        jobname = StringIO(json.loads(answer['jobname'][0]))
+        print('----- JOB NAME: -----')
+        print(jobname)
+        jobname_df = pd.DataFrame.from_dict({'job_name':[jobname]})
+
 
     # if that doesn't work it's a text submission
     except:
@@ -136,7 +141,7 @@ def receive_submission():
 
     s3filename = 'submissions/' + email + '%' + timestr + '.csv'
 
-    selected_groups_df = pd.concat([group1_df, group2_df, genes_df], axis=1)
+    selected_groups_df = pd.concat([group1_df, group2_df, genes_df, jobname_df], axis=1)
     print(selected_groups_df)
     AWS_S3_ACCESS_KEY = decouple.config('AWS_S3_ACCESS_KEY')
     AWS_S3_SECRET = decouple.config('AWS_S3_SECRET')
