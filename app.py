@@ -106,11 +106,13 @@ def receive_submission():
         genes = StringIO(json.loads(answer['genes'][0]))
         genes_df = pd.read_csv(genes, names=['selected_genes'])
         print(genes_df)
-        jobname = StringIO(json.loads(answer['jobname'][0]))
-        print('----- JOB NAME: -----')
+        jobname = answer['jobname'][0]
         print(jobname)
-        jobname_df = pd.DataFrame.from_dict({'job_name':[jobname]})
-
+        print('=======')
+        jobname_df = pd.DataFrame(columns=['job_name'])
+        jobname_df = jobname_df.append({'job_name': 'bla'}, ignore_index=True)
+        jobname_df['job_name'][0] = jobname
+        print(jobname_df)
 
     # if that doesn't work it's a text submission
     except:

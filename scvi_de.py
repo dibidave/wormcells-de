@@ -155,6 +155,10 @@ try:
     # for the gene descriptions text, which can be several sentences, we add a line break after each sentence
     de['gene_description_html'] = de['gene_description'].str.replace('\. ', '.<br>')
     print('	### ### ###  Creating plot')
+
+    try: jobname = submission['job_name'][0]
+    except: jobname = ' '
+
     fig = go.Figure(
         data=go.Scatter(
             x=de["log_scale_ratio"].round(3)
@@ -171,7 +175,7 @@ try:
         )
         , layout={
             "title": {"text":
-                          "Differential expression on C. elegans single cell data  <br> Compared groups: <br> <a href=" + url + ">" + url + '</a>'
+                          "Differential expression on C. elegans single cell data  <br> " + jobname + " <br> <a href=" + url + ">" + url + '</a>'
                 , 'x': 0.5
                       }
             , 'xaxis': {'title': {
@@ -212,7 +216,7 @@ try:
     html_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
     print('	### ### ###  Files uploaded successfully')
 
-    email_body = f' Your C. elegans single cell differential expression results from  🌋 wormcells-de 💥 are ready to download. <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your cell selection</a> <br> <br> Thanks <br> Eduardo'
+    email_body = f' Your wormcells-de 💥 C. elegans single cell differential expression results: {jobname} <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your cell selection</a> <br> <br> Thanks <br> Eduardo'
     print('	### ### ###  Email created')
 
     message = Mail(
