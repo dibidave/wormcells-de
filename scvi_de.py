@@ -244,7 +244,6 @@ except:
     logs_buffer.write(logs)
 
     csv_buffer = StringIO()
-    de_result_csv.to_csv(csv_buffer)
     logsfilename = 'logs/' + filename + '-logs.txt'
     print('	### ### ###  Putting log in s3...')
 
@@ -256,7 +255,7 @@ except:
     client.put_object(
         Body=logs_buffer.getvalue(),
         Bucket='scvi-differential-expression',
-        Key=csvfilename,
+        Key=logsfilename,
         ACL='public-read'
     )
     print('	### ### ###  Log in s3. Sending email...')
