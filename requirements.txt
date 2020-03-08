@@ -6,3 +6,4 @@ flask
 boto3
 Flask-Markdown
 gunicorn
+Flask-Misaka
