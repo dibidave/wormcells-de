@@ -167,7 +167,7 @@ try:
             , text=de['gene_description_html']
             , customdata=de.gene_id.values + '<br>Name: ' + de.gene_name.values.astype(str)
             , hovertemplate='%{customdata} <br>' +
-                            'Absolute Bayes Factor: %{y}<br>' +
+                            'ln(BF): %{y}<br>' +
                             'Log scale ratio: %{x}' +
                             '<extra>%{text}</extra>'
         )
@@ -177,8 +177,8 @@ try:
                 , 'x': 0.5
                       }
             , 'xaxis': {'title': {
-                "text": "Log2 of scVI expression scale <br> <br> <br> <b> Compared groups: </b> <br>" + selected_cells_csv_string}}
-            , 'yaxis': {'title': {"text": "Absolute value of Bayes Factor"}}
+                "text": "Log2 of scVI expression scale <b>"}}
+            , 'yaxis': {'title': {"text": "Natural log of absolute value of Bayes Factor, ln(BF) <br><br><br> Original selection: \n \n" + url}}
         }
     )
 
@@ -259,7 +259,7 @@ except:
         print(response.body)
         print(response.headers)
     except Exception as e:
-        print(e.message)
+        print(e)
 
     print('DONE!!!!!!!')
     print('DONE!!!!!!!')
