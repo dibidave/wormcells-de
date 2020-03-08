@@ -9,13 +9,14 @@ import decouple
 from io import StringIO
 import urllib
 from flaskext.markdown import Markdown
+from flask_misaka import Misaka
 
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
 logger.info('Starting wormcells-de...')
 
 flask_app = Flask(__name__)
-Markdown(flask_app)
+Misaka(flask_app, math_explicit = True)
 
 
 tables = Blueprint('tables', __name__, url_prefix='/tables')
@@ -178,7 +179,7 @@ def receive_submission():
 pwd > /home/ubuntu/started_ok.txt
 runuser -l  ubuntu -c 'pwd > /home/ubuntu/iamubuntu.txt'   ;
 runuser -l  ubuntu -c 'wget -O /home/ubuntu/scvi_de.py https://raw.githubusercontent.com/Munfred/wormcells-de/master/scvi_de.py'   ;
-echo 'python3 /home/ubuntu/scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + '''  home/ubuntu/command.txt'
+echo 'python3 /home/ubuntu/scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + '''  /home/ubuntu/command.txt'
 runuser -l  ubuntu -c 'python3 /home/ubuntu/scvi_de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;'
 echo "sudo halt" 
 

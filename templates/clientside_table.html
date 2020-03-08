@@ -23,6 +23,8 @@
 
     <script type="text/javascript"
             src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 
     <div class="normal">
@@ -84,11 +86,13 @@ ins</textarea>
         <br>
         <br>
         <br>
+
         {% filter markdown %}
-
             {% include 'about-the-data.md' %}
-
         {% endfilter %}
+
+        {% include 'bayes_factors.html' %}
+
 
     </div>
     <div>
