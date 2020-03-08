@@ -19,7 +19,7 @@ from sendgrid.helpers.mail import Mail
 
 url = (sys.argv[1])
 print(datetime.datetime.now())
-print('starting to process...')
+print('	✅	✅	✅  starting to process...')
 print(url)
 
 AWS_S3_ACCESS_KEY = (sys.argv[2])
@@ -67,21 +67,21 @@ try:
     )
 
     trainer.model.load_state_dict(torch.load(save_path + vae_file_name, map_location=torch.device('cpu')))
-    print('loaded vae')
-    print(trainer.model.eval())
+    print('	✅	✅	✅  loaded vae')
+    print(datetime.datetime.now())
 
     full = trainer.create_posterior(trainer.model, gene_dataset, indices=np.arange(len(gene_dataset)))
     latent, batch_indices, labels = full.sequential().get_latent()
     batch_indices = batch_indices.ravel()
 
-    print('computed full posterior')
+    print('	✅	✅	✅  computed full posterior')
 
     filename = url.split('https://scvi-differential-expression.s3.us-east-2.amazonaws.com/submissions/')[1]
     filename = filename.replace('%40', '@')
     filename = filename.replace('%25', '@')
     filename = filename.replace('.csv', '')
 
-    print('url = ', url)
+    print('	✅	✅	✅  url = ', url)
     submission = pd.read_csv(io.StringIO(requests.get(url).content.decode('utf-8')), index_col=0)
 
     selected_cells_csv_string = submission.to_csv(index=False).replace('\n', '<br>')
@@ -107,12 +107,12 @@ try:
         curr_boolean = (adata.obs['cell_type'] == cell) & (adata.obs['experiment'] == experiment)
         cell_idx2 = (cell_idx2 | curr_boolean)
 
-    print('computed cell_idx1 and 2')
+    print('	✅	✅	✅   computed cell_idx1 and 2')
 
     n_samples = 5000
     M_permutation = 5000
 
-    print('computing DE...')
+    print('	✅	✅	✅  computing DE...')
     print(datetime.datetime.now())
     de_res = full.differential_expression_score(
         cell_idx1.values,
@@ -120,7 +120,7 @@ try:
         n_samples=n_samples,
         M_permutation=M_permutation)
 
-    print('finished DE!')
+    print('	✅	✅	✅  finished DE!')
     print(datetime.datetime.now())
 
     # manipulate the DE results for plotting
@@ -156,7 +156,7 @@ try:
     # the text needs to be arranged in a matrix the same shape as the heatmap
     # for the gene descriptions text, which can be several sentences, we add a line break after each sentence
     de['gene_description_html'] = de['gene_description'].str.replace('\. ', '.<br>')
-
+    print('	✅	✅	✅  Creating plot')
     fig = go.Figure(
         data=go.Scatter(
             x=de["log_scale_ratio"].round(3)
@@ -186,14 +186,13 @@ try:
     de_result_csv.to_csv(csv_buffer)
     csvfilename = 'csv/' + filename + '-results.csv'
     htmlfilename = 'plots/' + filename + '-results.html'
+    print('	✅	✅	✅  Putting files in s3...')
 
     client = boto3.client('s3',
                           aws_access_key_id=AWS_S3_ACCESS_KEY,
                           aws_secret_access_key=AWS_S3_SECRET
                           )
 
-    print(AWS_S3_ACCESS_KEY)
-    print(AWS_S3_SECRET)
     client.put_object(
         Body=csv_buffer.getvalue(),
         Bucket='scvi-differential-expression',
@@ -213,8 +212,10 @@ try:
 
     csv_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(csvfilename)
     html_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
+    print('	✅	✅	✅  Files uploaded successfully')
 
     email_body = f' Your C. elegans single cell differential expression results from  🌋 wormcells-de 💥 are ready to download. <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your original selection </a> <br> <br> Thanks <br> Eduardo'
+    print('	✅	✅	✅  Email created:')
     print(email_body)
 
     message = Mail(
@@ -222,16 +223,18 @@ try:
         to_emails=email,
         subject='C. elegans single cell differential expression results',
         html_content=email_body)
-    try:
-        sg = SendGridAPIClient(sendgrid_key)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e.message)
+    sg = SendGridAPIClient(sendgrid_key)
+    response = sg.send(message)
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+    print('	✅	✅	✅  🎉  🎉  🎉   ✅	✅	✅  🎉  🎉  🎉 Email sent')
 
-    print('DONE!!!!!!!')
+    except Exception as e:
+
+        print(e)
+
+    print('	✅	✅	✅  Putting files in s3...')
     print('DONE!!!!!!!')
 
 
@@ -245,31 +248,50 @@ try:
     ec2.instances.filter(InstanceIds = [instance_id]).terminate()
 
 except:
-    str = open('log_file.txt', 'r').read()
+    print('	❌  ❌  ❌  ❌  ❌  ❌  ❌  ❌  ❌  ❌  ❌  ❌  SOMETHING FAILED')
+    logs = open('log_file.txt', 'r').read()
+
+    logs_buffer = StringIO()
+    logs_buffer.write(logs)
+
+    csv_buffer = StringIO()
+    de_result_csv.to_csv(csv_buffer)
+    logsfilename = 'logs/' + filename + '-logs.txt'
+    print('	✅	✅	✅  Putting log in s3...')
+
+    client = boto3.client('s3',
+                          aws_access_key_id=AWS_S3_ACCESS_KEY,
+                          aws_secret_access_key=AWS_S3_SECRET
+                          )
+
+    client.put_object(
+        Body=logs_buffer.getvalue(),
+        Bucket='scvi-differential-expression',
+        Key=csvfilename,
+        ACL='public-read'
+    )
+    print('	✅	✅	✅  Log in s3. Sending email...')
 
     message = Mail(
         from_email='eduardo@wormbase.org',
         to_emails='veigabeltrame@gmail.com',
-        subject='SOMETHING WENT WRONG!!!!111 user: ' + email,
-        html_content=str)
-    try:
-        sg = SendGridAPIClient(sendgrid_key)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e)
+        subject='SOMETHING WENT WRONG!!!!111',
+        html_content=logs_buffer)
 
-    print('DONE!!!!!!!')
-    print('DONE!!!!!!!')
+    sg = SendGridAPIClient(sendgrid_key)
+    response = sg.send(message)
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+
+    print('	✅	✅	✅  Email sent. Done.')
 
 
-    print('Terminating... ')
-    instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
-
-    session = boto3.Session(region_name='us-east-2',
-                            aws_access_key_id=AWS_S3_ACCESS_KEY,
-                            aws_secret_access_key=AWS_S3_SECRET)
-    ec2 = session.resource('ec2', region_name='us-east-2')
-    ec2.instances.filter(InstanceIds = [instance_id]).terminate()
+    # print('Terminating... ')
+    # instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
+    #
+    # session = boto3.Session(region_name='us-east-2',
+    #                         aws_access_key_id=AWS_S3_ACCESS_KEY,
+    #                         aws_secret_access_key=AWS_S3_SECRET)
+    # ec2 = session.resource('ec2', region_name='us-east-2')
+    # ec2.instances.filter(InstanceIds = [instance_id]).terminate()
