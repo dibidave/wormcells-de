@@ -173,7 +173,7 @@ try:
         )
         , layout={
             "title": {"text":
-                          "Differential expression on C. elegans single cell data  <br><br> Original selection: <br> <small> <code> <a href=" + url + ">" + url + '</a> </small> </code>'
+                          "Differential expression on C. elegans single cell data  <br> Compared groups: <br> <a href=" + url + ">" + url + '</a>'
                 , 'x': 0.5
                       }
             , 'xaxis': {'title': {
@@ -214,7 +214,7 @@ try:
     html_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
     print('	✅	✅	✅  Files uploaded successfully')
 
-    email_body = f' Your C. elegans single cell differential expression results from  🌋 wormcells-de 💥 are ready to download. <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your original selection </a> <br> <br> Thanks <br> Eduardo'
+    email_body = f' Your C. elegans single cell differential expression results from  🌋 wormcells-de 💥 are ready to download. <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your cell selection</a> <br> <br> Thanks <br> Eduardo'
     print('	✅	✅	✅  Email created:')
     print(email_body)
 
