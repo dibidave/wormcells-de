@@ -230,14 +230,6 @@ try:
     print(response.headers)
     print('	✅	✅	✅  🎉  🎉  🎉   ✅	✅	✅  🎉  🎉  🎉 Email sent')
 
-    except Exception as e:
-
-        print(e)
-
-    print('	✅	✅	✅  Putting files in s3...')
-    print('DONE!!!!!!!')
-
-
     print('Terminating... ')
     instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
 
