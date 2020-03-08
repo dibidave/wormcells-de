@@ -107,8 +107,6 @@ try:
         curr_boolean = (adata.obs['cell_type'] == cell) & (adata.obs['experiment'] == experiment)
         cell_idx2 = (cell_idx2 | curr_boolean)
 
-    print('	### ### ###   computed cell_idx1 and 2')
-
     n_samples = 5000
     M_permutation = 5000
 
@@ -215,8 +213,7 @@ try:
     print('	### ### ###  Files uploaded successfully')
 
     email_body = f' Your C. elegans single cell differential expression results from  🌋 wormcells-de 💥 are ready to download. <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your cell selection</a> <br> <br> Thanks <br> Eduardo'
-    print('	### ### ###  Email created:')
-    print(email_body)
+    print('	### ### ###  Email created')
 
     message = Mail(
         from_email='eduardo@wormbase.org',
@@ -262,13 +259,13 @@ except:
         Key=csvfilename,
         ACL='public-read'
     )
-    print('	### ### ### Log in s3. Sending email...')
+    print('	### ### ###  Log in s3. Sending email...')
 
     message = Mail(
         from_email='eduardo@wormbase.org',
         to_emails='veigabeltrame@gmail.com',
         subject='SOMETHING WENT WRONG!!!!111',
-        html_content=logs_buffer)
+        html_content=logs)
 
     sg = SendGridAPIClient(sendgrid_key)
     response = sg.send(message)
