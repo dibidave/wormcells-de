@@ -1,7 +1,5 @@
 # wormcells-de
 
-
-
 Production deployment is done following this guide from Digital Ocean: 
 https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
 
@@ -98,3 +96,16 @@ If this returns without indicating any issues, restart the Nginx process to read
 sudo systemctl restart nginx
 ```
 
+# Configuring the ec2 image (which runs scVI)
+
+If the VAE or data are updated, change the wget urls
+```
+cd ~
+wget https://github.com/Munfred/wormcells-site/releases/download/cao2017packer2019taylor2019/cao2017packer2019taylor2019.h5ad &&
+wget https://github.com/Munfred/wormcells-de/releases/download/cpt_vae_v2/cpt_vae_v2.pkl &&
+sudo apt-get update &&
+sudo apt install python3-pip -y &&
+sudo apt install python3.7 -y &&
+python3.7 -m pip install pip &&
+python3.7 -m pip install scvi plotly sendgrid boto3
+```
