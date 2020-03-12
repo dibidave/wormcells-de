@@ -186,7 +186,7 @@ def receive_submission():
 pwd > /home/ubuntu/started_ok.txt
 runuser -l  ubuntu -c 'pwd > /home/ubuntu/iamubuntu.txt'   ;
 runuser -l  ubuntu -c 'wget -O /home/ubuntu/de.py https://raw.githubusercontent.com/Munfred/wormcells-de/master/de.py'   ;
-runuser -l  ubuntu -c 'python3 /home/ubuntu/de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;'
+runuser -l  ubuntu -c 'python3.7 /home/ubuntu/de.py ''' + url + ' ' + AWS_S3_ACCESS_KEY + ' ' + AWS_S3_SECRET + ' ' + sendgrid_key + ' ' + sendgrid_name + ''' ;'
 echo "sudo halt" 
 
 '''
