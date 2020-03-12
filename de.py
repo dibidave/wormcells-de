@@ -166,7 +166,7 @@ try:
             , marker=dict(color=de['gene_color'])
             , hoverinfo='text'
             , text=de['gene_description_html']
-            , customdata=de.gene_id.values + '<br>Name: ' + de.gene_name.values + '<br> Bayes Factor: ' + de.bayes_factor_string
+            , customdata=de.gene_id.values.astype(str) + '<br>Name: ' + de.gene_name.values.astype(str) + '<br> Bayes Factor: ' + de.bayes_factor_string
             , hovertemplate='%{customdata} <br>' +
                             '-log10(p-value): %{y}<br>' +
                             'log2 fold change: %{x}' +
