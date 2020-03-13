@@ -119,7 +119,7 @@ $(document).ready(function () {
             var confirmation = confirm('You are about to submit: \n ' + ncells1 + ' cells in group 1 and ' + ncells2 + ' cells in group 2. \n Your email: ' + email)
             if (confirmation == true) {
                 json_genes = JSON.stringify(genes);
-                json_genes = JSON.stringify(jobname);
+                json_jobname = JSON.stringify(jobname);
 
                 $.post("/submit", {
                     // "contentType": "application/json",
@@ -127,7 +127,7 @@ $(document).ready(function () {
                     'data2': json2,
                     'email': email,
                     'genes': json_genes,
-                    'jobname':jobname,
+                    'jobname':json_jobname,
                 });
                 location.reload();
             }
