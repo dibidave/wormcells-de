@@ -128,9 +128,7 @@ try:
     # manipulate the DE results for plotting
     de = de_res.copy()
 
-    # we compute the ratio of the scVI scales to use that as a rough proxy for fold change
-    de['ratio_scale12'] = de['scale1'] / de['scale2']
-    de['log2_fold_change'] = np.log2(de['ratio_scale12'])
+
     # we use -log10 p-value in the volcano plot
     de['log10_pvalue'] = np.log10(de['proba_not_de'])
     # we provide the bayes factor in the CSV and on the plot mouseover
@@ -160,7 +158,7 @@ try:
 
     fig = go.Figure(
         data=go.Scatter(
-            x=de["log2_fold_change"].round(3)
+            x=de["mean"].round(3)
             , y=-de["log10_pvalue"].round(3)
             , mode='markers'
             , marker=dict(color=de['gene_color'])
