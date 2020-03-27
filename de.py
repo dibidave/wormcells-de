@@ -128,7 +128,8 @@ try:
     # manipulate the DE results for plotting
     de = de_res.copy()
 
-
+    # we use the scVI computer mean of the posterior log fold change
+    de['log2_fold_change'] = de['mean']
     # we use -log10 p-value in the volcano plot
     de['log10_pvalue'] = np.log10(de['proba_not_de'])
     # we provide the bayes factor in the CSV and on the plot mouseover
