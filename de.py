@@ -39,8 +39,9 @@ sys.stdout = open('log_file.txt', 'w')
 sys.stderr = sys.stdout
 # if True:
 try:
-    vae_file_name = 'cpt_vae_v2.pkl'
-    adata = anndata.read('cao2017packer2019taylor2019.h5ad')
+    vae_file_name = 'CPT_vae_cpu2.pkl'
+    adata = anndata.read('./wormcells-data-2020-03-30.h5ad')
+    adata.var = adata.var.reset_index()
     adata.var.index = adata.var['gene_id']
     adata.var.index = adata.var.index.rename('index')
 
@@ -64,9 +65,20 @@ try:
         frequency=1,
     )
 
-    trainer.model.load_state_dict(torch.load(save_path + vae_file_name, map_location=torch.device('cpu')))
+    # LOAD
+    full_file_save_path = os.path.join(save_path, vae_file_name)
+    trainer.model.load_state_dict(torch.load(full_file_save_path))
+    trainer.model.eval()
     print('	### ### ###  loaded vae')
     print(datetime.datetime.now())
+
+    # n_epochs = 5
+    # lr = 0.001
+    # full_file_save_path = os.path.join(save_path, vae_file_name)
+    # trainer.train(n_epochs=n_epochs, lr=lr)
+    # torch.save(trainer.model.state_dict(), full_file_save_path)
+    # train_test_results = pd.DataFrame(trainer.history).rename(columns={'elbo_train_set':'Train', 'elbo_test_set':'Test'})
+    # print(train_test_results)
 
     full = trainer.create_posterior(trainer.model, gene_dataset, indices=np.arange(len(gene_dataset)))
     latent, batch_indices, labels = full.sequential().get_latent()
@@ -74,11 +86,6 @@ try:
 
     print('	### ### ###  computed full posterior')
 
-    # construct the filename for saving the results
-    filename = url.split('https://scvi-differential-expression.s3.us-east-2.amazonaws.com/submissions/')[1]
-    filename = filename.replace('%40', '@')
-    filename = filename.replace('%25', '@')
-    filename = filename.replace('.csv', '')
 
     print('	### ### ###  url = ', url)
     # read submission csv and fetch selected cells
@@ -110,31 +117,32 @@ try:
 
     print('	### ### ###  computed idxs')
 
-    n_samples = 5000
-    M_permutation = 5000
+    n_samples = 1000
+    M_permutation = 1000
 
-    print('	### ### ###  computing DE...')
-    print(datetime.datetime.now())
-    de_res = full.differential_expression_score(
-        cell_idx1.values,
-        cell_idx2.values,
-        n_samples=n_samples,
+    de_change = full.differential_expression_score(
+        idx1=cell_idx1.values,  # we use the same cells as chosen before
+        idx2=cell_idx2.values,
         mode='change',  # set to the new change mode
-        M_permutation=M_permutation)
+        n_samples=n_samples,
+        M_permutation=M_permutation,
+    )
 
     print('	### ### ###  finished DE!')
     print(datetime.datetime.now())
 
     # manipulate the DE results for plotting
-    de = de_res.copy()
 
-    # we use the scVI computer mean of the posterior log fold change
-    de['log2_fold_change'] = de['mean']
-    # we use -log10 p-value in the volcano plot
-    de['log10_pvalue'] = np.log10(de['proba_not_de'])
-    # we provide the bayes factor in the CSV and on the plot mouseover
-    de['abs_bayes_factor'] = np.abs(de['bayes_factor'])
-    de = de.join(adata.var, how='inner')
+    # we use the `mean` entru in de_chage, it is the scVI posterior log2 fold change
+    de_change['log10_pvalue'] = np.log10(de_change['proba_not_de'])
+
+    # we take absolute values of the first bayes factor as the one to use on the volcano plot
+    # bayes1 and bayes2 should be roughtly the same, except with opposite signs
+    de_change['abs_bayes_factor'] = np.abs(de_change['bayes_factor'])
+    de_change = de_change.join(adata.var, how='inner')
+
+    # manipulate the DE results for plotting
+    de = de_change.copy()
 
     de['gene_color'] = 'rgba(100, 100, 100, 0.2)'
     for gene in submission['selected_genes'].dropna().values:
@@ -143,7 +151,8 @@ try:
         de['gene_color'][de['gene_id'].str.contains(gene)] = 'rgba(0, 0,255, 1)'
 
     de_result_csv = de[
-        ['proba_not_de', 'log10_pvalue', 'bayes_factor', 'log2_fold_change', 'gene_id','gene_name', 'gene_description']]
+        ['proba_not_de', 'log10_pvalue', 'bayes_factor', 'lfc_mean', 'lfc_median', 'lfc_std', 'lfc_min', 'lfc_max',
+         'gene_id', 'gene_name', 'gene_description']]
 
     de['gene_description_html'] = de['gene_description'].str.replace('\. ', '.<br>')
     print('	### ### ###  Creating plot')
@@ -159,13 +168,14 @@ try:
 
     fig = go.Figure(
         data=go.Scatter(
-            x=de["mean"].round(3)
+            x=de["lfc_mean"].round(3)
             , y=-de["log10_pvalue"].round(3)
             , mode='markers'
             , marker=dict(color=de['gene_color'])
             , hoverinfo='text'
             , text=de['gene_description_html']
-            , customdata=de.gene_id.values + '<br>Name: ' + de.gene_name.astype(str) + '<br> Bayes Factor: ' + de.bayes_factor_string
+            , customdata=de.gene_id.values + '<br>Name: ' + de.gene_name.astype(
+                str) + '<br> Bayes Factor: ' + de.bayes_factor_string
             , hovertemplate='%{customdata} <br>' +
                             '-log10(p-value): %{y}<br>' +
                             'log2 fold change: %{x}' +
@@ -180,6 +190,14 @@ try:
             , 'yaxis': {'title': {"text": "-log10(p-value)"}}
         }
     )
+
+    ### SAVE RESULTS AND SEND MAIL ####
+
+    # construct the filename for saving the results
+    filename = url.split('https://scvi-differential-expression.s3.us-east-2.amazonaws.com/submissions/')[1]
+    filename = filename.replace('%40', '@')
+    filename = filename.replace('%25', '@')
+    filename = filename.replace('.csv', '')
 
     csv_buffer = StringIO()
     de_result_csv.to_csv(csv_buffer)
