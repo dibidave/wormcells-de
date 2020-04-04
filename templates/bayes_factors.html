@@ -1,6 +1,18 @@
-<h1> Explanation of how the differential expression is computed </h1>
-<p> To perform differential expresison scVI follows protocol described in <a href="https://arxiv.org/abs/1709.02082">Lopez
-    et al, arXiv:1709.02082 </a>. For a given gene it performs hypothesis testing based on latent variable in the generative model that
+
+<p> To perform differential expression we use <a href="https://scvi.readthedocs.io/en/stable/index.html">scVI </a> v0.6.3.
+    The method for performing differential expression is the `change` function, introduced in scVI v0.6.0 and described
+    in <a href="https://doi.org/10.1101/794289">Boyeau et al, bioRxiv 2019 </a>.  It consists in estimating an effect
+    size random variable (here, log2 fold-change) and performing Bayesian hypothesis testing on this variable.
+
+    This allow us to estimate p-values and Bayes factors for the log-fold change, as well as
+    the mean, median, and standard deviation.
+
+    A tutorial on how to reproduce this analysis using the Packer 2019 dataset is available on the official scVI
+    documentation at https://scvi.readthedocs.io/en/stable/contributed_tutorials/scVI_DE_worm.html
+
+
+
+    For a given gene it performs hypothesis testing based on latent variable in the generative model that
     models the mean of the gene expression. We are comparing \(h_{1g}\), the mean expression of gene \(g\) in cell type \(1\) with \( h_{2g} \), the mean
     expression of \(g\) in cell type \(2\). The hypotheses are: </p>
 <p>

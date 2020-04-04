@@ -117,8 +117,8 @@ try:
 
     print('	### ### ###  computed idxs')
 
-    n_samples = 1000
-    M_permutation = 1000
+    n_samples = 10000
+    M_permutation = 10000
 
     de_change = full.differential_expression_score(
         idx1=cell_idx1.values,  # we use the same cells as chosen before
