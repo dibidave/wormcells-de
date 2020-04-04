@@ -196,7 +196,7 @@ echo "sudo halt"
     # create a new EC2 instance
     instances = ec2.create_instances(
         # image for scvi-v063-CPT2
-        ImageId='ami-046716810f741fdd1,
+        ImageId='ami-046716810f741fdd1',
         MinCount=1,
         MaxCount=1,
         InstanceType='r5d.4xlarge',
