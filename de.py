@@ -154,7 +154,6 @@ try:
         ['proba_not_de', 'log10_pvalue', 'bayes_factor', 'lfc_mean', 'lfc_median', 'lfc_std', 'lfc_min', 'lfc_max',
          'gene_id', 'gene_name', 'gene_description']]
 
-    de['gene_description_html'] = de['gene_description'].str.replace('\. ', '.<br>')
     print('	### ### ###  Creating plot')
 
     try:
@@ -174,12 +173,13 @@ try:
             , marker=dict(color=de['gene_color'])
             , hoverinfo='text'
             , text=de['gene_description_html']
-            , customdata=de.gene_id.values + '<br>Name: ' + de.gene_name.astype(
-                str) + '<br> Bayes Factor: ' + de.bayes_factor_string
-            , hovertemplate='%{customdata} <br>' +
-                            '-log10(p-value): %{y}<br>' +
-                            'log2 fold change: %{x}' +
-                            '<extra>%{text}</extra>'
+            , customdata=de.gene_name.astype(str) + '<br>' + de.gene_id.values + \
+                         '<br>Bayes Factor: \t' + de.bayes_factor_string + \
+                         '<br>-log10(p-value): \t' + de["log10_pvalue"].round(3).astype(str) + \
+                         '<br>log2 FC mean: \t' + de["lfc_mean"].round(3).astype(str) + \
+                         '<br>log2 FC median: \t' + de["lfc_median"].round(3).astype(str) + \
+                         '<br>log2 FC std: \t' + de["lfc_std"].round(3).astype(str)
+            , hovertemplate='%{customdata} <br><extra>%{text}</extra>'
         )
         , layout={
             "title": {"text":
