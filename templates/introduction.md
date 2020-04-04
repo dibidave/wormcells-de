@@ -12,8 +12,6 @@ Just select cell types and experiments to compare, some genes to highlight in yo
  Results should arrive in less than 15 minutes. If they take more than an hour, something broke, so let me know by writing to eduardo@wormbase.org. Also feel free to write me if you have any feedback.
 
 
-The single cell gene count matrixes were processed using a machine learning framework called [Single-cell Variational Inference (scVI)](https://github.com/YosefLab/scVI). The scVI framework enables integrating data from different sources (different experiments, batches and technologies), clustering and label transfer, and performing differential expression between clusters.
-
-To learn how the plots were made, check out [this Jupyter notebook](https://colab.research.google.com/drive/1hF7KSujhhHcyxzWkzAHy9lazXLexainr) which performs differential expression as is here here. It runs on Google Colab so you can start playing right away.
+The single cell gene count matrices were processed using a machine learning framework called [Single-cell Variational Inference (scVI)](https://github.com/YosefLab/scVI). The scVI framework enables integrating data from different sources (different experiments, batches and technologies), clustering and label transfer, and performing differential expression between clusters. The code, data and a tutorial are available at the bottom of this page. 
 
 The `wormcells-de` app is still in development and on this tool will inform how WormBase may incorporate and display single cell data in the future. 
