@@ -1,41 +1,27 @@
+<h1> Data and code availability and explanation of how differential expression is performed</h1>
 
 <p> To perform differential expression we use <a href="https://scvi.readthedocs.io/en/stable/index.html">scVI </a> v0.6.3.
     The method for performing differential expression is the `change` function, introduced in scVI v0.6.0 and described
     in <a href="https://doi.org/10.1101/794289">Boyeau et al, bioRxiv 2019 </a>.  It consists in estimating an effect
     size random variable (here, log2 fold-change) and performing Bayesian hypothesis testing on this variable.
-
+</p>
+<p>
     This allow us to estimate p-values and Bayes factors for the log-fold change, as well as
     the mean, median, and standard deviation.
-
-    A tutorial on how to reproduce this analysis using the Packer 2019 dataset is available on the official scVI
-    documentation at https://scvi.readthedocs.io/en/stable/contributed_tutorials/scVI_DE_worm.html
-
-
-
-    For a given gene it performs hypothesis testing based on latent variable in the generative model that
-    models the mean of the gene expression. We are comparing \(h_{1g}\), the mean expression of gene \(g\) in cell type \(1\) with \( h_{2g} \), the mean
-    expression of \(g\) in cell type \(2\). The hypotheses are: </p>
+</p>
 <p>
-    $$
-    M^g_1: h_{1g} > h_{2g}
-    $$
+    A Python tutorial using Jupyter Notebooks on how to reproduce this analysis using the Packer 2019 dataset is
+    <a href="https://scvi.readthedocs.io/en/stable/contributed_tutorials/scVI_DE_worm.html"> available on the official scVI
+    documentation </a>. The code used to run the wormcells-de app is available at the
+    <a href="https://github.com/Munfred/wormcells-de"> wormcells-de GitHub repository</a>.
+    The data for Packer 2019, Taylor 2019 and Cao 2017 is
+    <a href="https://github.com/Munfred/wormcells-site/releases/tag/Packer2019Taylor2019Cao2019_wrangle2"> available on
+        GitHub as an anndata file </a>(1GB size).
 
-    $$
-    M^g_2: h_{1g} \leq h_{2g}
-    $$
-
-    Differential expression between cell types 1 and 2 for each gene can then be based on the Bayes factors:
-
-    $$
-    \text{Natural Log Bayes Factor for gene g in cell types 1 and 2} = \ln ( {BF^g_{12}) = \ln(\frac{ p(M^g_1 | x_1,
-    x_2)}{p(M^g_2 | x_1, x_2)}})
-    $$
-
-    Note that the results from scVI are provided using the natural logarithm of the Bayes Factor. This is \(
-    \ln(BF_{10})\) in the table discussed below.
 </p>
 
 <h3>Interpreting Bayes factors</h3>
+<p> In addition to p-values, which are commonly seen in volcano plots, scVI also provides Bayes Factors</p>
 <p>To learn more about Bayes factors vs. p-values, see the review <a
         href="https://doi.org/10.1146/annurev-statistics-031017-100307"> On p-Values and Bayes Factors </a> by Leonhard
     Held and Manuela Ott.</p>
