@@ -16,6 +16,14 @@ logger=logging.getLogger(__name__)
 logger.info('Starting wormcells-de...')
 
 flask_app = Flask(__name__)
+
+# set proper loggin levels for gunicorn, taken from:
+# https://medium.com/@trstringer/logging-flask-and-gunicorn-the-manageable-way-2e6f0b8beb2f
+
+if __name__ != ‘__main__’:
+    gunicorn_logger = logging.getLogger(‘gunicorn.error’)
+    flask_app.logger.setLevel(gunicorn_logger.level)
+
 Misaka(flask_app, math_explicit = True)
 
 
