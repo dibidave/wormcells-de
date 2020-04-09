@@ -10,9 +10,9 @@ It is run with `gunicorn --bind 0.0.0.0:5000 wsgi:flask_app`
 ## Setting up a new server instance with Ubuntu 18.04
 
 ```
-sudo apt update
-sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools
-sudo apt install python3-venv
+sudo apt update -y
+sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools -y
+sudo apt install python3-venv -y
 
 cd ~
 git clone https://github.com/Munfred/wormcells-de.git
@@ -60,7 +60,7 @@ sudo systemctl enable wormcells
 
 Install Nginx, create server block configuration file:
 ```
-sudo apt install nginx
+sudo apt install nginx -y
 
 sudo nano /etc/nginx/sites-available/wormcells
 ```
