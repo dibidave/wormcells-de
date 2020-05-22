@@ -39,11 +39,11 @@ sys.stdout = open('log_file.txt', 'w')
 sys.stderr = sys.stdout
 # if True:
 try:
-    vae_file_name = 'CPT_vae_cpu2.pkl'
-    adata = anndata.read('./wormcells-data-2020-03-30.h5ad')
-    adata.var = adata.var.reset_index()
-    adata.var.index = adata.var['gene_id']
-    adata.var.index = adata.var.index.rename('index')
+    vae_file_name = 'quis9h95ckgwf0vo8ozsxif72qxsivfi.pkl'
+    adata = anndata.read('./n5xlzu8zum9c0nq3blinxg5ml9s6nab5.h5ad')
+#     adata.var = adata.var.reset_index()
+#     adata.var.index = adata.var['gene_id']
+#     adata.var.index = adata.var.index.rename('index')
 
     gene_dataset = GeneExpressionDataset()
 
@@ -51,8 +51,8 @@ try:
     gene_dataset.populate_from_data(
         adata.X,
         gene_names=adata.var.index.values,
-        cell_types=adata.obs['cell_type'].values,
-        batch_indices=adata.obs['experiment'].cat.codes.values,
+        cell_types=adata.obs['cell_type_infection'].values,
+        batch_indices=adata.obs['sample'].cat.codes.values,
     )
 
     vae = VAE(gene_dataset.nb_genes, n_batch=gene_dataset.n_batches)
@@ -93,26 +93,26 @@ try:
     selected_cells_csv_string = submission.to_csv(index=False).replace('\n', '<br>')
 
     # reconstruct user email from submission url
-    email = url.split('https://scvi-differential-expression.s3.us-east-2.amazonaws.com/submissions/')[1]
+    email = url.split('https://aavcells-de.s3.us-west-2.amazonaws.com/submissions/')[1]
     email = email.split('%25')[0]
     email = email.replace('%40', '@')
 
     # create masks for cell selection according to submission
     # start with all entries false
-    cell_idx1 = adata.obs['cell_type'] == '000000'
+    cell_idx1 = adata.obs['cell_type_infection'] == '000000'
 
     for _, entry in submission[['cell_type1', 'experiment1']].dropna().iterrows():
         cell = entry['cell_type1'].strip()
         experiment = entry['experiment1'].strip()
-        curr_boolean = (adata.obs['cell_type'] == cell) & (adata.obs['experiment'] == experiment)
+        curr_boolean = (adata.obs['cell_type_infection'] == cell) & (adata.obs['sample'] == experiment)
         cell_idx1 = (cell_idx1 | curr_boolean)
 
-    cell_idx2 = adata.obs['cell_type'] == '000000'
+    cell_idx2 = adata.obs['cell_type_infection'] == '000000'
 
     for _, entry in submission[['cell_type2', 'experiment2']].dropna().iterrows():
         cell = entry['cell_type2'].strip()
         experiment = entry['experiment2'].strip()
-        curr_boolean = (adata.obs['cell_type'] == cell) & (adata.obs['experiment'] == experiment)
+        curr_boolean = (adata.obs['cell_type_infection'] == cell) & (adata.obs['sample'] == experiment)
         cell_idx2 = (cell_idx2 | curr_boolean)
 
     print('	### ### ###  computed idxs')
@@ -144,12 +144,16 @@ try:
     # manipulate the DE results for plotting
     de = de_change.copy()
 
+    de['gene_description'] = ''
+    de['gene_name'] = de.index
+    de['gene_id'] = de.index
+    
     de['gene_color'] = 'rgba(100, 100, 100, 0.2)'
     for gene in submission['selected_genes'].dropna().values:
         gene = gene.strip()
         de['gene_color'][de['gene_name'].str.contains(gene)] = 'rgba(0, 0,255, 1)'
         de['gene_color'][de['gene_id'].str.contains(gene)] = 'rgba(0, 0,255, 1)'
-
+    
     de_result_csv = de[
         ['proba_not_de', 'log10_pvalue', 'bayes_factor', 'lfc_mean', 'lfc_median', 'lfc_std', 'lfc_min', 'lfc_max',
          'gene_id', 'gene_name', 'gene_description']]
@@ -161,7 +165,7 @@ try:
     except:
         jobname = ' '
 
-    de['gene_description_html'] = de['gene_description'].str.replace('\. ', '.<br>')
+    de['gene_description_html'] = de.index
     string_bf_list = [str(bf) for bf in np.round(de['bayes_factor'].values, 3)]
     de['bayes_factor_string'] = string_bf_list
 
@@ -183,7 +187,7 @@ try:
         )
         , layout={
             "title": {"text":
-                          "Differential expression on C. elegans single cell data  <br> " + jobname + " <br> <a href=" + url + ">" + url + '</a>'
+                          "Differential expression on AAV single cell data  <br> " + jobname + " <br> <a href=" + url + ">" + url + '</a>'
                 , 'x': 0.5
                       }
             , 'xaxis': {'title': {"text": "log2 fold change"}}
@@ -194,7 +198,7 @@ try:
     ### SAVE RESULTS AND SEND MAIL ####
 
     # construct the filename for saving the results
-    filename = url.split('https://scvi-differential-expression.s3.us-east-2.amazonaws.com/submissions/')[1]
+    filename = url.split('https://aavcells-de.s3.us-west-2.amazonaws.com/submissions/')[1]
     filename = filename.replace('%40', '@')
     filename = filename.replace('%25', '@')
     filename = filename.replace('.csv', '')
@@ -205,14 +209,11 @@ try:
     htmlfilename = 'plots/' + filename + '-results.html'
     print('	### ### ###  Putting files in s3...')
 
-    client = boto3.client('s3',
-                          aws_access_key_id=AWS_S3_ACCESS_KEY,
-                          aws_secret_access_key=AWS_S3_SECRET
-                          )
+    client = boto3.client('s3')
 
     client.put_object(
         Body=csv_buffer.getvalue(),
-        Bucket='scvi-differential-expression',
+        Bucket='aavcells-de',
         Key=csvfilename,
         ACL='public-read'
     )
@@ -222,24 +223,24 @@ try:
 
     client.put_object(
         Body=html_buffer.getvalue(),
-        Bucket='scvi-differential-expression',
+        Bucket='aavcells-de',
         Key=htmlfilename,
         ACL='public-read'
     )
 
-    csv_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(csvfilename)
-    html_url = 'https://scvi-differential-expression.s3.us-east-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
+    csv_url = 'https://aavcells-de.s3.us-west-2.amazonaws.com/' + urllib.parse.quote(csvfilename)
+    html_url = 'https://aavcells-de.s3.us-west-2.amazonaws.com/' + urllib.parse.quote(htmlfilename)
     print('	### ### ###  Files uploaded successfully')
     dt_ended = datetime.datetime.utcnow()
     total_time = str(int((dt_ended - dt_started).total_seconds()))
 
-    email_body = f' Your 🌋 wormcells-de 💥 C. elegans single cell differential expression results: <br> {jobname} <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your cell selection</a> <br> Processing time: {total_time}s <br> <br> <br> Thanks <br> Eduardo'
+    email_body = f' Your aavcells-de single cell differential expression results: <br> {jobname} <br><br> <a href="{csv_url}">CSV file with results</a>  <br> <a href="{html_url}">Vocano plot</a>  <br> <a href="{url}">Your cell selection</a> <br> Processing time: {total_time}s <br> <br> <br> Thanks <br> Eduardo and David'
     print('	### ### ###  Email created')
 
     message = Mail(
-        from_email='eduardo@wormbase.org',
+        from_email='dibidave@caltech.edu',
         to_emails=email,
-        subject='C. elegans single cell differential expression results',
+        subject='AAV single-cell differential expression results',
         html_content=email_body)
     sg = SendGridAPIClient(sendgrid_key)
     response = sg.send(message)
@@ -253,15 +254,13 @@ try:
     print('Terminating... ')
     instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
 
-    session = boto3.Session(region_name='us-east-2',
-                            aws_access_key_id=AWS_S3_ACCESS_KEY,
-                            aws_secret_access_key=AWS_S3_SECRET)
-    ec2 = session.resource('ec2', region_name='us-east-2')
+    session = boto3.Session(region_name='us-west-2')
+    ec2 = session.resource('ec2', region_name='us-west-2')
     ec2.instances.filter(InstanceIds=[instance_id]).terminate()
 # if False:
 except:
     print('	XXXXXXXXXXXXXXXX SOMETHING FAILED XXXXXXXXXXXXXXX')
-    filename = url.split('https://scvi-differential-expression.s3.us-east-2.amazonaws.com/submissions/')[1]
+    filename = url.split('https://aavcells-de.s3.us-west-2.amazonaws.com/submissions/')[1]
     filename = filename.replace('%40', '@')
     filename = filename.replace('%25', '@')
     filename = filename.replace('.csv', '')
@@ -275,22 +274,19 @@ except:
     logsfilename = 'logs/' + filename + '-logs.txt'
     print('	### ### ###  Putting log in s3...')
 
-    client = boto3.client('s3',
-                          aws_access_key_id=AWS_S3_ACCESS_KEY,
-                          aws_secret_access_key=AWS_S3_SECRET
-                          )
+    client = boto3.client('s3')
 
     client.put_object(
         Body=logs_buffer.getvalue(),
-        Bucket='scvi-differential-expression',
+        Bucket='aavcells-de',
         Key=logsfilename,
         ACL='public-read'
     )
     print('	### ### ###  Log in s3. Sending email...')
 
     message = Mail(
-        from_email='eduardo@wormbase.org',
-        to_emails='veigabeltrame@gmail.com',
+        from_email='dibidave@caltech.edu',
+        to_emails='dibidave@caltech.edu',
         subject='SOMETHING WENT WRONG!!!!111',
         html_content=logs)
 
