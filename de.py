@@ -238,7 +238,7 @@ try:
     print('	### ### ###  Email created')
 
     message = Mail(
-        from_email='dibidave@gmail.com',
+        from_email='dibidave@caltech.edu',
         to_emails=email,
         subject='AAV single-cell differential expression results',
         html_content=email_body)
@@ -287,8 +287,8 @@ except:
     print('	### ### ###  Log in s3. Sending email...')
 
     message = Mail(
-        from_email='dibidave@gmail.com',
-        to_emails='dibidave@gmail.com',
+        from_email='dibidave@caltech.edu',
+        to_emails='dibidave@caltech.edu',
         subject='SOMETHING WENT WRONG!!!!111',
         html_content=logs)
 
@@ -300,11 +300,9 @@ except:
 
     print('	### ### ###  Email sent. Done.')
 
-    # print('Terminating... ')
-    # instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
-    #
-    # session = boto3.Session(region_name='us-east-2',
-    #                         aws_access_key_id=AWS_S3_ACCESS_KEY,
-    #                         aws_secret_access_key=AWS_S3_SECRET)
-    # ec2 = session.resource('ec2', region_name='us-east-2')
-    # ec2.instances.filter(InstanceIds = [instance_id]).terminate()
+    print('Terminating... ')
+    instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id").text
+    
+    session = boto3.Session(region_name='us-west-2')
+    ec2 = session.resource('ec2', region_name='us-west-2')
+    ec2.instances.filter(InstanceIds = [instance_id]).terminate()
