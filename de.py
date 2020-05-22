@@ -238,7 +238,7 @@ try:
     print('	### ### ###  Email created')
 
     message = Mail(
-        from_email='dibidave@caltech.edu',
+        from_email='dibidave@gmail.com',
         to_emails=email,
         subject='AAV single-cell differential expression results',
         html_content=email_body)
@@ -260,6 +260,8 @@ try:
 # if False:
 except:
     print('	XXXXXXXXXXXXXXXX SOMETHING FAILED XXXXXXXXXXXXXXX')
+    e = sys.exc_info()[0]
+    print(e)
     filename = url.split('https://aavcells-de.s3.us-west-2.amazonaws.com/submissions/')[1]
     filename = filename.replace('%40', '@')
     filename = filename.replace('%25', '@')
@@ -285,8 +287,8 @@ except:
     print('	### ### ###  Log in s3. Sending email...')
 
     message = Mail(
-        from_email='dibidave@caltech.edu',
-        to_emails='dibidave@caltech.edu',
+        from_email='dibidave@gmail.com',
+        to_emails='dibidave@gmail.com',
         subject='SOMETHING WENT WRONG!!!!111',
         html_content=logs)
 
